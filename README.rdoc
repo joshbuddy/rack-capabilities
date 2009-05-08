@@ -10,7 +10,7 @@
     def curious?
       true #and how!
     end
-    
+
     def call(env)
       # who is before me?
       Rack::Capabilities.before(self)
@@ -27,14 +27,14 @@
       # or just find based on anything!
       Rack::Capabilities.find{|mw| mw.respond_to?(:curious?)}
       # returns our friend, CuriousMiddleware
-      
+
       # And presumably you'd
       # want to do stuff..
       # but thats up to you
-      
+
       @app.call(env)
     end
-    
+
   end
 
   use Rack::Capabilities
@@ -43,8 +43,7 @@
   use Rack::CuriousMiddleware
   use Rack::Middleware4
   use Rack::Middleware5
-  
+
 == Caveats and Limitations
 
 Rack Capabilities must be used first. It also must be required (not autoloaded as it must monkey patch Rack::Builder). Introspection is only available at <tt>call</tt> time.
-  

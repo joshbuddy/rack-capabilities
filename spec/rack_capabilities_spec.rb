@@ -4,7 +4,7 @@ GenericMiddleware = Class.new do
   def initialize(app)
     @app = app
   end
-  
+
   def call(env)
     @app.call(env)
   end
@@ -29,24 +29,24 @@ describe "Rack Capabilities" do
       use GenericMiddleware5
       run Proc.new{ |env| [200, {}, []]}
     }
-    
+
     @builder.call({})
   end
 
   it "should find a middleware by class" do
     Rack::Capabilities.find(GenericMiddleware3).class.should == GenericMiddleware3
   end
-  
+
   it "should find a middleware by proc" do
     Rack::Capabilities.find{|mw| mw.class.to_s == 'GenericMiddleware2'}.class.should == GenericMiddleware2
   end
-  
+
   it "should find a middleware before" do
     Rack::Capabilities.before(Rack::Capabilities.find(GenericMiddleware3)).class.should == GenericMiddleware2
   end
-  
+
   it "should find a middleware after" do
     Rack::Capabilities.after(Rack::Capabilities.find(GenericMiddleware4)).class.should == GenericMiddleware5
   end
-  
+
 end

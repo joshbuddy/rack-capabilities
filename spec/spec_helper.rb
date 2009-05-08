@@ -7,5 +7,5 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rack_capabilities'
 
 Spec::Runner.configure do |config|
-  
+
 end
