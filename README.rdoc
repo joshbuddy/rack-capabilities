@@ -13,19 +13,19 @@
 
     def call(env)
       # who is before me?
-      Rack::Capabilities.before(self)
+      env['rack.capabilities'].before(self)
       # returns Rack::Middleware2
 
       # who is after me?
-      Rack::Capabilities.after(self)
+      env['rack.capabilities'].after(self)
       # returns Rack::Middleware4
 
       # can I go find Rack::Middleware1?
-      Rack::Capabilities.find(Rack::Middleware1)
+      env['rack.capabilities'].find(Rack::Middleware1)
       # returns Rack::Middleware1
 
       # or just find based on anything!
-      Rack::Capabilities.find{|mw| mw.respond_to?(:curious?)}
+      env['rack.capabilities'].find{|mw| mw.respond_to?(:curious?)}
       # returns our friend, CuriousMiddleware
 
       # And presumably you'd
@@ -46,4 +46,4 @@
 
 == Caveats and Limitations
 
-Rack Capabilities must be used first. It also must be required (not autoloaded as it must monkey patch Rack::Builder). Introspection is only available at <tt>call</tt> time.
+Rack Capabilities must be used first. It also must be required (not autoloaded as it must monkey patch Rack::Builder). The environment is available at <tt>call</tt> time.
