@@ -18,8 +18,7 @@ GenericMiddleware5 = Class.new(GenericMiddleware)
 
 describe "Rack Capabilities" do
 
-  before(:each) do
-
+  def app(&block)
     @builder = Rack::Builder.new {
       use Rack::Capabilities
       use GenericMiddleware1
@@ -27,26 +26,34 @@ describe "Rack Capabilities" do
       use GenericMiddleware3
       use GenericMiddleware4
       use GenericMiddleware5
-      run Proc.new{ |env| [200, {}, []]}
+      run lambda { |env| block[env]; [200, {}, []] }
     }
 
     @builder.call({})
   end
 
   it "should find a middleware by class" do
-    Rack::Capabilities.find(GenericMiddleware3).class.should == GenericMiddleware3
+    app do |env|
+      env['rack.capabilities'].find(GenericMiddleware3).class.should == GenericMiddleware3
+    end
   end
 
   it "should find a middleware by proc" do
-    Rack::Capabilities.find{|mw| mw.class.to_s == 'GenericMiddleware2'}.class.should == GenericMiddleware2
+    app do |env|
+      env['rack.capabilities'].find{|mw| mw.class.to_s == 'GenericMiddleware2'}.class.should == GenericMiddleware2
+    end
   end
 
   it "should find a middleware before" do
-    Rack::Capabilities.before(Rack::Capabilities.find(GenericMiddleware3)).class.should == GenericMiddleware2
+    app do |env|
+      env['rack.capabilities'].before(env['rack.capabilities'].find(GenericMiddleware3)).class.should == GenericMiddleware2
+    end
   end
 
   it "should find a middleware after" do
-    Rack::Capabilities.after(Rack::Capabilities.find(GenericMiddleware4)).class.should == GenericMiddleware5
+    app do |env|
+      env['rack.capabilities'].after(env['rack.capabilities'].find(GenericMiddleware4)).class.should == GenericMiddleware5
+    end
   end
 
 end
