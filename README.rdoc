@@ -46,4 +46,4 @@
 
 == Caveats and Limitations
 
-Rack::Capabilities must be required (not autoloaded as it must monkey patch Rack::Builder). The environment is available at <tt>call</tt> time.
+Rack::Capabilities must be required (not autoloaded as it must monkey patch Rack::Builder). The rack.capabilities environment variable is *only* available at <tt>call</tt> time.
